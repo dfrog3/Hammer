@@ -7,6 +7,7 @@
 
 
 #include <Arduino.h>
+#include "RotaryWheel.h"
 
 class HammerDisplay {
     HammerDisplay &operator=(const HammerDisplay &) = delete;
@@ -17,6 +18,8 @@ public:
     void WriteText(String txt);
 
     void WriteBool(bool v);
+
+    void WriteRotaryState(RotaryState state);
 };
 
 

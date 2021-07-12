@@ -46,3 +46,19 @@ void HammerDisplay::WriteBool(bool v) {
     }
     display.display();
 }
+
+void HammerDisplay::WriteRotaryState(RotaryState state) {
+
+    switch (state) {
+
+        case Up:
+            WriteText("up");
+            break;
+        case Down:
+            WriteText("Down");
+            break;
+        case Nothing:
+            WriteText("Nothing");
+            break;
+    }
+}

@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <HammerSource/HammerDisplay.h>
 #include <HammerSource/SdCardInterfacer.h>
+#include <HammerSource/RotaryWheel.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <WiFiUdp.h>
@@ -13,6 +14,8 @@ const char *password = "23d71963b5465";
 bool staredInOTA;
 HammerDisplay *hammerDisplay;
 SdCardInterfacer *sdCard;
+RotaryWheel *rotaryWheel;
+
 
 int wheel1 = 34;
 int wheel2 = 32;
@@ -22,9 +25,6 @@ int macPc = 12;
 
 
 void setup() {
-
-    pinMode(wheel1, INPUT_PULLUP);
-    pinMode(wheel2, INPUT_PULLUP);
     pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);
     pinMode(macPc, INPUT_PULLUP);
@@ -111,6 +111,8 @@ void setup() {
 
     sdCard = new SdCardInterfacer(hammerDisplay);
     sdCard->Init();
+    rotaryWheel = new RotaryWheel(wheel1, wheel2);
+    Serial.begin(9600);
 }
 
 void loop() {
@@ -118,6 +120,18 @@ void loop() {
         ArduinoOTA.handle();
         return;
     }
+    int state = rotaryWheel->Update();
 
-    hammerDisplay->WriteBool(digitalRead(thumb) == HIGH);
+    switch (state) {
+
+        case Up:
+            Serial.println("up");
+            break;
+        case Down:
+            Serial.println("Down");
+            break;
+        case Nothing:
+            break;
+    }
+
 }
