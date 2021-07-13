@@ -27,7 +27,7 @@ RotaryState RotaryWheel::Update() {
         lastLastWipe = lastWipe;
         lastWipe = millis();
     }
-    delay(10);
+    delay(5);
     bool pin1bool = digitalRead(pin1) == LOW;
     bool pin2bool = digitalRead(pin2) == LOW;
     int state = -1;

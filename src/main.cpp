@@ -23,7 +23,21 @@ int strike = 25;
 int thumb = 27;
 int macPc = 12;
 
+void UpdateWheel(){
+    int state = rotaryWheel->Update();
 
+    switch (state) {
+
+        case Up:
+            Serial.println("up");
+            break;
+        case Down:
+            Serial.println("Down");
+            break;
+        case Nothing:
+            break;
+    }
+}
 void setup() {
     pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);
@@ -41,10 +55,6 @@ void setup() {
         delay(500);
         hasHitThumb = hasHitThumb || (digitalRead(thumb) == LOW);
     }
-    hammerDisplay->WriteText("TEST!");
-    delay(2000);
-    hammerDisplay->WriteBool(hasHitThumb);
-    delay(2000);
 
     if (hasHitThumb) {
         hammerDisplay->WriteText("resetting");
@@ -112,26 +122,20 @@ void setup() {
     sdCard = new SdCardInterfacer(hammerDisplay);
     sdCard->Init();
     rotaryWheel = new RotaryWheel(wheel1, wheel2);
-    Serial.begin(9600);
+    Serial.begin(115200);
+    attachInterrupt(digitalPinToInterrupt(wheel1), UpdateWheel, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(wheel2), UpdateWheel, CHANGE);
+
+
 }
+
+
 
 void loop() {
     if (staredInOTA) {
         ArduinoOTA.handle();
         return;
     }
-    int state = rotaryWheel->Update();
 
-    switch (state) {
-
-        case Up:
-            Serial.println("up");
-            break;
-        case Down:
-            Serial.println("Down");
-            break;
-        case Nothing:
-            break;
-    }
 
 }
