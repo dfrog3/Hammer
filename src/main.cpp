@@ -136,6 +136,7 @@ void loop() {
         ArduinoOTA.handle();
         return;
     }
+    rotaryWheel->UpdateReset();
 
 
 }

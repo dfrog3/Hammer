@@ -30,7 +30,7 @@ class RotaryWheel {
 private:
     int pin1;
     int pin2;
-    int lastState = -1;
+    volatile int lastState = -1;
     std::deque<WheelEvent> *eventQ;
     const int timeBetweenWipes = 300;
     unsigned long  lastWipe;
@@ -41,6 +41,8 @@ public:
     RotaryWheel &operator=(const RotaryWheel &) = delete;
 
     RotaryState Update();
+    void UpdateReset();
+
 
 
 };

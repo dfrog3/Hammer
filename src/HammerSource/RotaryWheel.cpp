@@ -16,17 +16,7 @@ RotaryWheel::RotaryWheel(int pin1, int pin2) {
 
 RotaryState RotaryWheel::Update() {
 
-    if (lastWipe < lastLastWipe) {
-        lastWipe = 0;
-        lastLastWipe = 0;
-    }
-    if (millis() > lastWipe + timeBetweenWipes) {
-        this->eventQ = new std::deque<WheelEvent>();
-        this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
-        this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
-        lastLastWipe = lastWipe;
-        lastWipe = millis();
-    }
+
     delay(5);
     bool pin1bool = digitalRead(pin1) == LOW;
     bool pin2bool = digitalRead(pin2) == LOW;
@@ -77,6 +67,24 @@ RotaryState RotaryWheel::Update() {
     }
     return RotaryState::Nothing;
 
+
+}
+
+void RotaryWheel::UpdateReset() {
+
+    if (lastWipe < lastLastWipe) {
+        lastWipe = 0;
+        lastLastWipe = 0;
+    }
+    if (millis() > lastWipe + timeBetweenWipes) {
+        noInterrupts();
+        this->eventQ = new std::deque<WheelEvent>();
+        this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
+        this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
+        interrupts();
+        lastLastWipe = lastWipe;
+        lastWipe = millis();
+    }
 
 }
 
