@@ -7,9 +7,8 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 
-
-const char *ssid = "dhr01-d6a488-g";
-const char *password = "23d71963b5465";
+String ssid = "dhr01-d6a488-g";
+String password = "23d71963b5465";
 
 bool staredInOTA;
 HammerDisplay *hammerDisplay;
@@ -42,9 +41,12 @@ void setup() {
     pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);
     pinMode(macPc, INPUT_PULLUP);
-
     delay(1000);
     hammerDisplay = new HammerDisplay();
+    sdCard = new SdCardInterfacer(hammerDisplay);
+    sdCard->Init();
+    ssid = sdCard->readFile("/ssid.txt");
+    password = sdCard->readFile("/password.txt");
     staredInOTA = false;
 
     hammerDisplay->WriteText("reset?");
@@ -61,7 +63,7 @@ void setup() {
 
         staredInOTA = true;
         WiFi.mode(WIFI_STA);
-        WiFi.begin(ssid, password);
+        WiFi.begin(ssid.c_str(), password.c_str());
         while (WiFi.waitForConnectResult() != WL_CONNECTED) {
             hammerDisplay->WriteText("bad wifi");
             delay(5000);
@@ -119,8 +121,7 @@ void setup() {
         delay(2000);
     }
 
-    sdCard = new SdCardInterfacer(hammerDisplay);
-    sdCard->Init();
+
     rotaryWheel = new RotaryWheel(wheel1, wheel2);
     Serial.begin(115200);
     attachInterrupt(digitalPinToInterrupt(wheel1), UpdateWheel, CHANGE);

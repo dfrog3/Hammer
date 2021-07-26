@@ -123,22 +123,23 @@ public:
         }
     }
 
-    void readFile(fs::FS &fs, const char *path) {
-        return;
+    String readFile(const char *path) {
+//        return;
 
-        Serial.printf("Reading file: %s\n", path);
+        display->WriteText(path);
 
-        File file = fs.open(path);
+        File file = SD.open(path);
         if (!file) {
-            Serial.println("Failed to open file for reading");
-            return;
+            display->WriteText("Failed to open file for reading");
+            return "";
         }
 
-        Serial.print("Read from file: ");
+        String finalString = "";
         while (file.available()) {
-            Serial.write(file.read());
+            finalString += (char) file.read();
         }
         file.close();
+        return finalString;
     }
 
     void writeFile(const char *path, const char *message) {
