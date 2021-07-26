@@ -22,21 +22,32 @@ int strike = 25;
 int thumb = 27;
 int macPc = 12;
 
-void UpdateWheel(){
+int last;
+int count;
+void UpdateWheel() {
     int state = rotaryWheel->Update();
-
+    if(state == Nothing){
+        return;
+    }
+    if (last == state){
+        count +=1;
+    } else{
+        count = 0;
+    }
+    last = state;
     switch (state) {
 
         case Up:
-            Serial.println("up");
+            hammerDisplay->WriteText("up " + (String) count);
             break;
         case Down:
-            Serial.println("Down");
+            hammerDisplay->WriteText("Down "+ (String) count);
             break;
         case Nothing:
             break;
     }
 }
+
 void setup() {
     pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);
@@ -123,13 +134,11 @@ void setup() {
 
 
     rotaryWheel = new RotaryWheel(wheel1, wheel2);
-    Serial.begin(115200);
-    attachInterrupt(digitalPinToInterrupt(wheel1), UpdateWheel, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(wheel2), UpdateWheel, CHANGE);
+//    attachInterrupt(digitalPinToInterrupt(wheel1), UpdateWheel, CHANGE);
+//    attachInterrupt(digitalPinToInterrupt(wheel2), UpdateWheel, CHANGE);
 
 
 }
-
 
 
 void loop() {
@@ -138,6 +147,6 @@ void loop() {
         return;
     }
     rotaryWheel->UpdateReset();
-
+    UpdateWheel();
 
 }
