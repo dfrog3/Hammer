@@ -492,7 +492,7 @@ protected:
   uint16_t *pixelBuf[2];             ///< Working buffers
   uint16_t maxFillLen;               ///< Max pixels per DMA xfer
   uint16_t lastFillColor = 0;        ///< Last color used w/fill
-  uint32_t lastFillLen = 0;          ///< # of pixels w/last fill
+  uint32_t lastFillLen = 0;          ///< # of pixels w/lastWheelState fill
   uint8_t onePixelBuf;               ///< For hi==lo fill
 #endif
 #if defined(USE_FAST_PINIO)

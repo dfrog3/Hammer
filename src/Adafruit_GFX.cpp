@@ -1164,7 +1164,7 @@ void Adafruit_GFX::drawChar(int16_t x, int16_t y, unsigned char c,
         }
       }
     }
-    if (bg != color) { // If opaque, draw vertical line for last column
+    if (bg != color) { // If opaque, draw vertical line for lastWheelState column
       if (size_x == 1 && size_y == 1)
         writeFastVLine(x + 5, y, 8, bg);
       else
@@ -1710,7 +1710,7 @@ bool Adafruit_GFX_Button::contains(int16_t x, int16_t y) {
 
 /**************************************************************************/
 /*!
-   @brief    Query whether the button was pressed since we last checked state
+   @brief    Query whether the button was pressed since we lastWheelState checked state
    @returns  True if was not-pressed before, now is.
 */
 /**************************************************************************/
@@ -1718,7 +1718,7 @@ bool Adafruit_GFX_Button::justPressed() { return (currstate && !laststate); }
 
 /**************************************************************************/
 /*!
-   @brief    Query whether the button was released since we last checked state
+   @brief    Query whether the button was released since we lastWheelState checked state
    @returns  True if was pressed before, now is not.
 */
 /**************************************************************************/

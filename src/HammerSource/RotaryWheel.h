@@ -7,6 +7,7 @@
 
 #include <Arduino.h>
 #include <queue>
+#include <functional>
 
 enum RotaryState {
     Up = 0,
@@ -31,17 +32,27 @@ private:
     int pin1;
     int pin2;
     volatile int lastState = -1;
+    volatile RotaryState lastRegisteredState;
+    volatile int directionCount;
+    unsigned long lastDirectionTime;
     std::deque<WheelEvent> *eventQ;
     const int timeBetweenWipes = 300;
     unsigned long  lastWipe;
     unsigned long  lastLastWipe;
+
+    std::function<void(RotaryState, int)> turnFunction = *new std::function<void(RotaryState, int)>([](RotaryState direction, int count) { });
+
+
+    void RegisterTurn(RotaryState state);
+    void UpdateReset();
+
 public:
     RotaryWheel(int pin1, int pint2);
 
     RotaryWheel &operator=(const RotaryWheel &) = delete;
 
-    RotaryState Update();
-    void UpdateReset();
+    void Update();
+    void SetTurnAction(std::function<void(RotaryState, int)> *function);
 
 
 

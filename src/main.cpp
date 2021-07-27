@@ -4,8 +4,13 @@
 #include <HammerSource/RotaryWheel.h>
 #include <WiFi.h>
 #include <ESPmDNS.h>
-#include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <HammerSource/HammerBlueToothUploader.h>
+#include <BluetoothSerial.h>
+
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
+#endif
 
 String ssid = "dhr01-d6a488-g";
 String password = "23d71963b5465";
@@ -14,6 +19,8 @@ bool staredInOTA;
 HammerDisplay *hammerDisplay;
 SdCardInterfacer *sdCard;
 RotaryWheel *rotaryWheel;
+HammerBlueToothUploader *uploader;
+BluetoothSerial SerialBT;
 
 
 int wheel1 = 34;
@@ -22,31 +29,9 @@ int strike = 25;
 int thumb = 27;
 int macPc = 12;
 
-int last;
-int count;
-void UpdateWheel() {
-    int state = rotaryWheel->Update();
-    if(state == Nothing){
-        return;
-    }
-    if (last == state){
-        count +=1;
-    } else{
-        count = 0;
-    }
-    last = state;
-    switch (state) {
+int lastWheelState;
+int wheelDirectionCount;
 
-        case Up:
-            hammerDisplay->WriteText("up " + (String) count);
-            break;
-        case Down:
-            hammerDisplay->WriteText("Down "+ (String) count);
-            break;
-        case Nothing:
-            break;
-    }
-}
 
 void setup() {
     pinMode(strike, INPUT_PULLUP);
@@ -63,8 +48,8 @@ void setup() {
     hammerDisplay->WriteText("reset?");
     delay(2000);
     bool hasHitThumb = false;
-    while (millis() < 6000) {
-        hammerDisplay->WriteBool(digitalRead(thumb) == HIGH);
+    unsigned long currentTime = millis();
+    while (millis() < currentTime + 3000) {
         delay(500);
         hasHitThumb = hasHitThumb || (digitalRead(thumb) == LOW);
     }
@@ -81,19 +66,6 @@ void setup() {
             ESP.restart();
         }
 
-        // Port defaults to 3232
-        // ArduinoOTA.setPort(3232);
-
-        // Hostname defaults to esp3232-[MAC]
-        // ArduinoOTA.setHostname("myesp32");
-
-        // No authentication by default
-        // ArduinoOTA.setPassword("admin");
-
-        // Password can be set with it's md5 value as well
-        // MD5(admin) = 21232f297a57a5a743894a0e4a801fc3
-        // ArduinoOTA.setPasswordHash("21232f297a57a5a743894a0e4a801fc3");
-
         ArduinoOTA
                 .onStart([]() {
                     String type;
@@ -109,7 +81,6 @@ void setup() {
                     hammerDisplay->WriteText("\nEnd");
                 })
                 .onProgress([](unsigned int progress, unsigned int total) {
-//                hammerDisplay->WriteText("Progress: %u%%\r", (progress / (total / 100)));
                 })
                 .onError([](ota_error_t error) {
 //                hammerDisplay->WriteText(("Error[%u]: ", error));
@@ -123,21 +94,19 @@ void setup() {
 
         ArduinoOTA.begin();
 
-//        hammerDisplay->WriteText("rdy 4 upld");
         hammerDisplay->WriteText(WiFi.localIP().toString());
         return;
         // end ota
     } else {
-        hammerDisplay->WriteText("start ok");
-        delay(2000);
+        hammerDisplay->WriteText("start");
+        delay(1000);
     }
 
 
     rotaryWheel = new RotaryWheel(wheel1, wheel2);
-//    attachInterrupt(digitalPinToInterrupt(wheel1), UpdateWheel, CHANGE);
-//    attachInterrupt(digitalPinToInterrupt(wheel2), UpdateWheel, CHANGE);
-
-
+    uploader = new HammerBlueToothUploader();
+    Serial.begin(115200);
+    SerialBT.begin("ESP");
 }
 
 
@@ -146,7 +115,13 @@ void loop() {
         ArduinoOTA.handle();
         return;
     }
-    rotaryWheel->UpdateReset();
-    UpdateWheel();
+    rotaryWheel->Update();
+
+    String val = SerialBT.readString();
+    if(val != ""){
+        hammerDisplay->WriteText(val);
+        delay(3000);
+    }
+
 
 }

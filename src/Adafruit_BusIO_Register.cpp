@@ -170,7 +170,7 @@ uint32_t Adafruit_BusIO_Register::read(void) {
 }
 
 /*!
- *    @brief  Read cached data from last time we wrote to this register
+ *    @brief  Read cached data from lastWheelState time we wrote to this register
  *    @return Returns 0xFFFFFFFF on failure, value otherwise
  */
 uint32_t Adafruit_BusIO_Register::readCached(void) { return _cached; }

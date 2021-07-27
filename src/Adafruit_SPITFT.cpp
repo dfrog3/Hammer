@@ -671,7 +671,7 @@ void Adafruit_SPITFT::initSPI(uint32_t freq, uint8_t spiMode) {
         pixelBuf[1] = &pixelBuf[0][major];
         // Determine number of DMA descriptors needed to cover
         // entire screen when entire 2-line pixelBuf is used
-        // (round up for fractional last descriptor).
+        // (round up for fractional lastWheelState descriptor).
         int numDescriptors = (WIDTH * HEIGHT + (maxFillLen - 1)) / maxFillLen;
         // DMA descriptors MUST be 128-bit (16 byte) aligned.
         // memalign() is considered obsolete but it's replacements
@@ -958,7 +958,7 @@ void Adafruit_SPITFT::writePixel(int16_t x, int16_t y, uint16_t color) {
     @param  block      If true (default case if unspecified), function blocks
                        until DMA transfer is complete. This is simply IGNORED
                        if DMA is not enabled. If false, the function returns
-                       immediately after the last DMA transfer is started,
+                       immediately after the lastWheelState DMA transfer is started,
                        and one should use the dmaWait() function before
                        doing ANY other display-related activities (or even
                        any SPI-related activities, if using an SPI display
@@ -1025,22 +1025,22 @@ void Adafruit_SPITFT::writePixels(uint16_t *colors, uint32_t len, bool block,
 #endif // end __SAMD51__
     if (!bigEndian) { // Normal little-endian situation...
       while (len) {
-        int count = (len < maxSpan) ? len : maxSpan;
+        int wheelDirectionCount = (len < maxSpan) ? len : maxSpan;
 
         // Because TFT and SAMD endianisms are different, must swap
         // bytes from the 'colors' array passed into a DMA working
         // buffer. This can take place while the prior DMA transfer
         // is in progress, hence the need for two pixelBufs.
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < wheelDirectionCount; i++) {
           pixelBuf[pixelBufIdx][i] = __builtin_bswap16(*colors++);
         }
         // The transfers themselves are relatively small, so we don't
         // need a long descriptor list. We just alternate between the
         // first two, sharing pixelBufIdx for that purpose.
         descriptor[pixelBufIdx].SRCADDR.reg =
-            (uint32_t)pixelBuf[pixelBufIdx] + count * 2;
+            (uint32_t)pixelBuf[pixelBufIdx] + wheelDirectionCount * 2;
         descriptor[pixelBufIdx].BTCTRL.bit.SRCINC = 1;
-        descriptor[pixelBufIdx].BTCNT.reg = count * 2;
+        descriptor[pixelBufIdx].BTCNT.reg = wheelDirectionCount * 2;
         descriptor[pixelBufIdx].DESCADDR.reg = 0;
 
         while (dma_busy)
@@ -1054,7 +1054,7 @@ void Adafruit_SPITFT::writePixels(uint16_t *colors, uint32_t len, bool block,
           dma.trigger();
         pixelBufIdx = 1 - pixelBufIdx; // Swap DMA pixel buffers
 
-        len -= count;
+        len -= wheelDirectionCount;
       }
     } else { // bigEndian == true
       // With big-endian pixel data, this can be handled as a single
@@ -1065,13 +1065,13 @@ void Adafruit_SPITFT::writePixels(uint16_t *colors, uint32_t len, bool block,
       // worth of data, so this won't run past the end of the list.
       int d, numDescriptors = (len + 32766) / 32767;
       for (d = 0; d < numDescriptors; d++) {
-        int count = (len < 32767) ? len : 32767;
-        descriptor[d].SRCADDR.reg = (uint32_t)colors + count * 2;
+        int wheelDirectionCount = (len < 32767) ? len : 32767;
+        descriptor[d].SRCADDR.reg = (uint32_t)colors + wheelDirectionCount * 2;
         descriptor[d].BTCTRL.bit.SRCINC = 1;
-        descriptor[d].BTCNT.reg = count * 2;
+        descriptor[d].BTCNT.reg = wheelDirectionCount * 2;
         descriptor[d].DESCADDR.reg = (uint32_t)&descriptor[d + 1];
-        len -= count;
-        colors += count;
+        len -= wheelDirectionCount;
+        colors += wheelDirectionCount;
       }
       descriptor[d - 1].DESCADDR.reg = 0;
 
@@ -1090,7 +1090,7 @@ void Adafruit_SPITFT::writePixels(uint16_t *colors, uint32_t len, bool block,
     lastFillLen = 0;
     if (block) {
       while (dma_busy)
-        ; // Wait for last line to complete
+        ; // Wait for lastWheelState line to complete
 #if defined(__SAMD51__) || defined(ARDUINO_SAMD_ZERO)
       if (connection == TFT_HARD_SPI) {
         // See SAMD51/21 note in writeColor()
@@ -1112,7 +1112,7 @@ void Adafruit_SPITFT::writePixels(uint16_t *colors, uint32_t len, bool block,
 }
 
 /*!
-    @brief  Wait for the last DMA transfer in a prior non-blocking
+    @brief  Wait for the lastWheelState DMA transfer in a prior non-blocking
             writePixels() call to complete. This does nothing if DMA
             is not enabled, and is not needed if blocking writePixels()
             was used (as is the default case).
@@ -1184,9 +1184,9 @@ void Adafruit_SPITFT::writeColor(uint16_t color, uint32_t len) {
     }
 
     while (len) {
-      uint32_t const count = min(len, pixbufcount);
-      writePixels(pixbuf, count, true, true);
-      len -= count;
+      uint32_t const wheelDirectionCount = min(len, pixbufcount);
+      writePixels(pixbuf, wheelDirectionCount, true, true);
+      len -= wheelDirectionCount;
     }
 
     rtos_free(pixbuf);
@@ -1205,12 +1205,12 @@ void Adafruit_SPITFT::writeColor(uint16_t color, uint32_t len) {
       // since we're using much larger chunks per descriptor here.
       numDescriptors = (len + 32766) / 32767;
       for (d = 0; d < numDescriptors; d++) {
-        int count = (len < 32767) ? len : 32767;
+        int wheelDirectionCount = (len < 32767) ? len : 32767;
         descriptor[d].SRCADDR.reg = (uint32_t)&onePixelBuf;
         descriptor[d].BTCTRL.bit.SRCINC = 0;
-        descriptor[d].BTCNT.reg = count * 2;
+        descriptor[d].BTCNT.reg = wheelDirectionCount * 2;
         descriptor[d].DESCADDR.reg = (uint32_t)&descriptor[d + 1];
-        len -= count;
+        len -= wheelDirectionCount;
       }
       descriptor[d - 1].DESCADDR.reg = 0;
     } else {
@@ -1222,7 +1222,7 @@ void Adafruit_SPITFT::writeColor(uint16_t color, uint32_t len) {
       uint32_t *pixelPtr = (uint32_t *)pixelBuf[0],
                twoPixels = __builtin_bswap16(color) * 0x00010001;
       // We can avoid some or all of the buffer-filling if the color
-      // is the same as last time...
+      // is the same as lastWheelState time...
       if (color == lastFillColor) {
         // If length is longer than prior instance, fill only the
         // additional pixels in the buffer and update lastFillLen.

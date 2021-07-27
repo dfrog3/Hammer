@@ -14,9 +14,14 @@ RotaryWheel::RotaryWheel(int pin1, int pin2) {
     this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
 }
 
-RotaryState RotaryWheel::Update() {
 
+void RegisterTurn(RotaryState state) {
 
+}
+
+void RotaryWheel::Update() {
+
+    UpdateReset();
     delay(5);
     bool pin1bool = digitalRead(pin1) == LOW;
     bool pin2bool = digitalRead(pin2) == LOW;
@@ -34,7 +39,8 @@ RotaryState RotaryWheel::Update() {
 
     if (lastState == -1 || lastState == state) {
         lastState = state;
-        return RotaryState::Nothing;
+        RegisterTurn(RotaryState::Nothing);
+        return;
     }
 
     if (lastState == 3 && state == 0) {
@@ -62,11 +68,12 @@ RotaryState RotaryWheel::Update() {
         WheelEvent w2 = eventQ->at(1);
 
         if (w1.getState() == w2.getState() && w2.getMills() - w1.getMills() < 200) {
-            return w1.getState();
+            RegisterTurn(w1.getState());
+            return;
         }
     }
-    return RotaryState::Nothing;
 
+    RegisterTurn(RotaryState::Nothing);
 
 }
 
@@ -77,15 +84,36 @@ void RotaryWheel::UpdateReset() {
         lastLastWipe = 0;
     }
     if (millis() > lastWipe + timeBetweenWipes) {
-        noInterrupts();
         this->eventQ = new std::deque<WheelEvent>();
         this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
         this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
-        interrupts();
         lastLastWipe = lastWipe;
         lastWipe = millis();
     }
 
+    if (lastDirectionTime != 0 && millis() - lastDirectionTime > 1000) {
+        lastDirectionTime = 0;
+    }
+
+}
+
+void RotaryWheel::RegisterTurn(RotaryState state) {
+    if (state == Nothing) {
+        return;
+    }
+    if (lastRegisteredState == state) {
+        directionCount += 1;
+    } else {
+        directionCount = 0;
+    }
+    lastRegisteredState = state;
+    lastDirectionTime = millis();
+    turnFunction(lastRegisteredState, directionCount);
+
+}
+
+void RotaryWheel::SetTurnAction(std::function<void(RotaryState, int)> *function) {
+    turnFunction = *function;
 }
 
 
