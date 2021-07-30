@@ -5,8 +5,7 @@
 #include <WiFi.h>
 #include <ESPmDNS.h>
 #include <ArduinoOTA.h>
-#include <HammerSource/HammerBlueToothUploader.h>
-#include <BluetoothSerial.h>
+#include <HammerSource/WifiJsonGetter.h>
 
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
@@ -19,8 +18,8 @@ bool staredInOTA;
 HammerDisplay *hammerDisplay;
 SdCardInterfacer *sdCard;
 RotaryWheel *rotaryWheel;
-HammerBlueToothUploader *uploader;
-BluetoothSerial SerialBT;
+WifiJsonGetter *jsonGetter;
+
 
 
 int wheel1 = 34;
@@ -32,6 +31,9 @@ int macPc = 12;
 int lastWheelState;
 int wheelDirectionCount;
 
+const std::string ssidFile ="/ssid.txt";
+const std::string passwordFile = "/password.txt";
+const std::string settingsFile = "/settings.json";
 
 void setup() {
     pinMode(strike, INPUT_PULLUP);
@@ -41,8 +43,8 @@ void setup() {
     hammerDisplay = new HammerDisplay();
     sdCard = new SdCardInterfacer(hammerDisplay);
     sdCard->Init();
-    ssid = sdCard->readFile("/ssid.txt");
-    password = sdCard->readFile("/password.txt");
+    ssid = sdCard->readFile(ssidFile.c_str());
+    password = sdCard->readFile(passwordFile.c_str());
     staredInOTA = false;
 
     hammerDisplay->WriteText("reset?");
@@ -104,9 +106,8 @@ void setup() {
 
 
     rotaryWheel = new RotaryWheel(wheel1, wheel2);
-    uploader = new HammerBlueToothUploader();
+    jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
     Serial.begin(115200);
-    SerialBT.begin("ESP");
 }
 
 
@@ -116,12 +117,7 @@ void loop() {
         return;
     }
     rotaryWheel->Update();
-
-    String val = SerialBT.readString();
-    if(val != ""){
-        hammerDisplay->WriteText(val);
-        delay(3000);
-    }
+    jsonGetter->Update();
 
 
 }

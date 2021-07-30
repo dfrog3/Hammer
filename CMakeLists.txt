@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/HammerSource/HammerDisplay.cpp src/HammerSource/HammerDisplay.h src/HammerSource/RotaryWheel.cpp src/HammerSource/RotaryWheel.h src/HammerSource/HammerBlueToothUploader.cpp src/HammerSource/HammerBlueToothUploader.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/HammerSource/HammerDisplay.cpp src/HammerSource/HammerDisplay.h src/HammerSource/RotaryWheel.cpp src/HammerSource/RotaryWheel.h src/HammerSource/WifiJsonGetter.cpp src/HammerSource/WifiJsonGetter.h src/HammerSource/SdCardInterfacer.cpp)
