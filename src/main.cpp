@@ -3,13 +3,10 @@
 #include <HammerSource/SdCardInterfacer.h>
 #include <HammerSource/RotaryWheel.h>
 #include <WiFi.h>
-#include <ESPmDNS.h>
-#include <ArduinoOTA.h>
 #include <HammerSource/WifiJsonGetter.h>
+#include <HammerSource/OTAFirmFlasher.h>
 
-#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
-#error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
-#endif
+
 
 String ssid = "dhr01-d6a488-g";
 String password = "23d71963b5465";
@@ -57,63 +54,26 @@ void setup() {
     }
 
     if (hasHitThumb) {
-        hammerDisplay->WriteText("resetting");
-
+        OTAFirmFlasher::Init(hammerDisplay, ssid.c_str(), password.c_str());
         staredInOTA = true;
-        WiFi.mode(WIFI_STA);
-        WiFi.begin(ssid.c_str(), password.c_str());
-        while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-            hammerDisplay->WriteText("bad wifi");
-            delay(5000);
-            ESP.restart();
-        }
-
-        ArduinoOTA
-                .onStart([]() {
-                    String type;
-                    if (ArduinoOTA.getCommand() == U_FLASH)
-                        type = "sketch";
-                    else // U_SPIFFS
-                        type = "filesystem";
-
-                    // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-                    hammerDisplay->WriteText("Found firm");
-                })
-                .onEnd([]() {
-                    hammerDisplay->WriteText("\nEnd");
-                })
-                .onProgress([](unsigned int progress, unsigned int total) {
-                })
-                .onError([](ota_error_t error) {
-//                hammerDisplay->WriteText(("Error[%u]: ", error));
-                    hammerDisplay->WriteText(("Error OTA"));
-                    if (error == OTA_AUTH_ERROR) hammerDisplay->WriteText("Auth Failed");
-                    else if (error == OTA_BEGIN_ERROR) hammerDisplay->WriteText("Begin Failed");
-                    else if (error == OTA_CONNECT_ERROR) hammerDisplay->WriteText("Connect Failed");
-                    else if (error == OTA_RECEIVE_ERROR) hammerDisplay->WriteText("Receive Failed");
-                    else if (error == OTA_END_ERROR) hammerDisplay->WriteText("End Failed");
-                });
-
-        ArduinoOTA.begin();
-
-        hammerDisplay->WriteText(WiFi.localIP().toString());
         return;
         // end ota
     } else {
         hammerDisplay->WriteText("start");
+        rotaryWheel = new RotaryWheel(wheel1, wheel2);
+        jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
         delay(1000);
     }
 
 
-    rotaryWheel = new RotaryWheel(wheel1, wheel2);
-    jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
-    Serial.begin(115200);
+
+//    Serial.begin(115200);
 }
 
 
 void loop() {
     if (staredInOTA) {
-        ArduinoOTA.handle();
+        OTAFirmFlasher::Update();
         return;
     }
     rotaryWheel->Update();
