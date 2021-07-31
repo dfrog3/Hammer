@@ -5,7 +5,12 @@
 #include <WiFi.h>
 #include <HammerSource/WifiJsonGetter.h>
 #include <HammerSource/OTAFirmFlasher.h>
-
+// todo boot screen 1
+// - mac pc flag
+// settings class and load settings 2
+// - set active settings
+// - bluetooth press buttons
+// - settings ui
 
 
 String ssid = "dhr01-d6a488-g";
@@ -16,8 +21,6 @@ HammerDisplay *hammerDisplay;
 SdCardInterfacer *sdCard;
 RotaryWheel *rotaryWheel;
 WifiJsonGetter *jsonGetter;
-
-
 
 int wheel1 = 34;
 int wheel2 = 32;
@@ -61,13 +64,13 @@ void setup() {
     } else {
         hammerDisplay->WriteText("start");
         rotaryWheel = new RotaryWheel(wheel1, wheel2);
-        jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
+//        jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
         delay(1000);
     }
 
 
 
-//    Serial.begin(115200);
+    Serial.begin(115200);
 }
 
 
@@ -77,7 +80,7 @@ void loop() {
         return;
     }
     rotaryWheel->Update();
-    jsonGetter->Update();
-
+    hammerDisplay->DrawFrame();
+    delay(1000);
 
 }

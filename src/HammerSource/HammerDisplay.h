@@ -20,6 +20,14 @@ public:
     void WriteBool(bool v);
 
     void WriteRotaryState(RotaryState state);
+
+    void DrawFrame();
+
+    void DrawKeys();
+
+    void DrawMotionBar(float percentComplete);
+
+    void DrawProfileNames(int mode, std::string names[6]);
 };
 
 
