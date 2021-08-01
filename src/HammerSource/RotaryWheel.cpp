@@ -84,7 +84,7 @@ void RotaryWheel::UpdateReset() {
         lastLastWipe = 0;
     }
     if (millis() > lastWipe + timeBetweenWipes) {
-        this->eventQ = new std::deque<WheelEvent>();
+        this->eventQ->clear();
         this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
         this->eventQ->push_back(WheelEvent(RotaryState::Nothing, 0));
         lastLastWipe = lastWipe;
