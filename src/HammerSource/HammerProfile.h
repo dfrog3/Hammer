@@ -31,6 +31,9 @@ public:
     static bool ContainsControl(std::vector<std::string> keys);
     static bool ContainsShift(std::vector<std::string> keys);
     static bool ContainsOption(std::vector<std::string> keys);
+    static bool ContainsEnter(std::vector<std::string> keys);
+    static bool ContainsTab(std::vector<std::string> keys);
+    static bool ContainsEsc(std::vector<std::string> keys);
 
     const std::string &getStrikeDisplay() const;
 

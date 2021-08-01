@@ -13,6 +13,9 @@
 #include <HammerSource/SdCardInterfacer.h>
 #include <HammerSource/RotaryWheel.h>
 #include <HammerSource/HammerDisplay.h>
+#include <algorithm>
+#include <cctype>
+#include <string>
 
 
 
@@ -20,22 +23,27 @@ class KeyboardProgram {
 
 
 private:
-//    BleKeyboard bleKeyboard;
     std::vector<HammerProfile> profiles;
     HammerProfile *activeProfile;
     RotaryWheel *rotaryWheel;
     HammerDisplay *hammerDisplay;
-//    ulong lastTurn;
-//    const unsigned long timeUntilReset = 2000;
+    bool hasReleasedStrike;
+    int strike;
+    int thumb;
+    long canStrikeTime = 0;
+    long eraseLastTurnTime;
     volatile int activeProfileIndex = 0;
 private:
     void DrawNames();
+    void PressButtons();
+    void PressSpecialKeys(std::vector<std::string> keys);
 public:
     KeyboardProgram(
             RotaryWheel *rotaryWheel,
             SdCardInterfacer *sdCardInterfacer,
             HammerDisplay *hammerDisplay,
-            std::string settingsFileName);
+            std::string settingsFileName,
+            int strike, int thumb);
 
     KeyboardProgram &operator=(const KeyboardProgram &) = delete;
 

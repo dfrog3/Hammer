@@ -208,10 +208,10 @@ void HammerDisplay::DrawKeys(HammerProfile *profile) {
     bool control = HammerProfile::ContainsControl(profile->getStrikeSpecialKeys());
     bool option = HammerProfile::ContainsOption(profile->getStrikeSpecialKeys());
     //swing specials
-    display.drawChar(1, 32, 'A', apple, !apple, 1);
-    display.drawChar(9, 32, 'S', shift, !shift, 1);
-    display.drawChar(17, 32, 'C', control, !control, 1);
-    display.drawChar(25, 32, 'O', option, !option, 1);
+    display.drawChar(1, 32, 'A', !apple, apple, 1);
+    display.drawChar(9, 32, 'S', !shift, shift, 1);
+    display.drawChar(17, 32, 'C', !control, control, 1);
+    display.drawChar(25, 32, 'O', !option, option, 1);
 
     display.drawChar(11, 43, profile->getThumbDisplay()[0], 1, 0, 2); // thumb
 
@@ -220,10 +220,10 @@ void HammerDisplay::DrawKeys(HammerProfile *profile) {
     control = HammerProfile::ContainsControl(profile->getThumbSpecialKeys());
     option = HammerProfile::ContainsOption(profile->getThumbSpecialKeys());
     //swing specials
-    display.drawChar(1, 59, 'A', apple, !apple, 1);
-    display.drawChar(9, 59, 'S', shift, !shift, 1);
-    display.drawChar(17, 59, 'C', control, !control, 1);
-    display.drawChar(25, 59, 'O', option, !option, 1);
+    display.drawChar(1, 59, 'A', !apple, apple, 1);
+    display.drawChar(9, 59, 'S', !shift, shift, 1);
+    display.drawChar(17, 59, 'C', !control, control, 1);
+    display.drawChar(25, 59, 'O', !option, option, 1);
     display.display();
 
 }

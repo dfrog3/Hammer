@@ -4,12 +4,17 @@
 
 #include "KeyboardProgram.h"
 
+BleKeyboard bleKeyboard;
+
+
 KeyboardProgram::KeyboardProgram(
         RotaryWheel *rotaryWheel,
         SdCardInterfacer *sdCardInterfacer,
         HammerDisplay *hammerDisplay,
-        std::string settingsFileName) {
-
+        std::string settingsFileName,
+        int strike, int thumb) {
+    this->strike = strike;
+    this->thumb = thumb;
     std::string rawSettings = sdCardInterfacer->readFile(settingsFileName.c_str()).c_str();
 
     cJSON *settings = cJSON_Parse(rawSettings.c_str());
@@ -43,10 +48,9 @@ KeyboardProgram::KeyboardProgram(
     hammerDisplay->DrawKeys(activeProfile);
 
     hammerDisplay->DrawMotionBar(0, false);
-//
-//    bleKeyboard.deviceName = "Hammer";
-//    bleKeyboard.begin();
-//    Serial.println(8);
+
+    bleKeyboard.deviceName = "Hammer";
+    bleKeyboard.begin();
 
 
 }
@@ -60,6 +64,7 @@ void KeyboardProgram::DrawNames() {
 }
 
 void KeyboardProgram::OnWheelTurn(RotaryState state, int count) {
+    eraseLastTurnTime = millis() + 2000;//time until reset scroll wheel
     if (count > 3) {
         switch (state) {
 
@@ -74,8 +79,7 @@ void KeyboardProgram::OnWheelTurn(RotaryState state, int count) {
 
         if (activeProfileIndex > size) {
             activeProfileIndex = 0;
-        }
-        else if (activeProfileIndex < 0) {
+        } else if (activeProfileIndex < 0) {
             activeProfileIndex = size;
 
         }
@@ -88,13 +92,78 @@ void KeyboardProgram::OnWheelTurn(RotaryState state, int count) {
         count = 0;
     }
 
-    hammerDisplay->DrawMotionBar(((float) count) / 3, state==RotaryState::Up);
+    hammerDisplay->DrawMotionBar(((float) count) / 3, state == RotaryState::Up);
 
 
 }
 
 void KeyboardProgram::Update() {
     rotaryWheel->Update();
+    PressButtons();
+    if (millis() > eraseLastTurnTime) {
+        rotaryWheel->ResetCount();
+        hammerDisplay->DrawMotionBar(0, true);
+
+    }
+
+
+}
+
+void KeyboardProgram::PressSpecialKeys(std::vector<std::string> keys){
+    if (HammerProfile::ContainsApple(keys)) {
+        bleKeyboard.press(KEY_LEFT_GUI);
+    }
+    if (HammerProfile::ContainsShift(keys)) {
+        bleKeyboard.press(KEY_LEFT_SHIFT);
+    }
+    if (HammerProfile::ContainsControl(keys)) {
+        bleKeyboard.press(KEY_LEFT_CTRL);
+    }
+    if (HammerProfile::ContainsOption(keys)) {
+        bleKeyboard.press(KEY_LEFT_ALT);
+    }
+    if (HammerProfile::ContainsEnter(keys)) {
+        bleKeyboard.press(KEY_RETURN);
+    }
+    if (HammerProfile::ContainsTab(keys)) {
+        bleKeyboard.press(KEY_TAB);
+    }
+    if (HammerProfile::ContainsEsc(keys)) {
+        bleKeyboard.press(KEY_ESC);
+    }
 }
 
 
+
+void KeyboardProgram::PressButtons() {
+    bool struck = (digitalRead(strike) == LOW);
+    if (struck) {
+
+        if (!hasReleasedStrike) {
+            return;
+        }
+        hasReleasedStrike = false;
+        canStrikeTime = millis() + 500;//time between strikes
+        if (digitalRead(thumb) == LOW) {
+            PressSpecialKeys(activeProfile->getThumbSpecialKeys());
+            for (const auto &i : activeProfile->getThumbChars()) {
+                bleKeyboard.press(std::tolower(i[0]));
+            }
+
+        } else {
+            PressSpecialKeys(activeProfile->getStrikeSpecialKeys());
+            for (const auto &i : activeProfile->getStrikeChars()) {
+                bleKeyboard.press(std::tolower(i[0]));
+            }
+        }
+        delay(50);
+        bleKeyboard.releaseAll();
+    } else {
+        if (millis() > canStrikeTime) {
+
+            hasReleasedStrike = true;
+        }
+    }
+
+
+}

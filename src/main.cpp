@@ -68,7 +68,7 @@ void setup() {
     } else {
         hammerDisplay->WriteText("start");
         rotaryWheel = new RotaryWheel(wheel1, wheel2);
-        keyboardProgram = new KeyboardProgram(rotaryWheel, sdCard, hammerDisplay, settingsFile);
+        keyboardProgram = new KeyboardProgram(rotaryWheel, sdCard, hammerDisplay, settingsFile, strike, thumb);
 //        jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
         delay(1000);
     }

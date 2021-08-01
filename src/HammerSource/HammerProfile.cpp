@@ -43,7 +43,6 @@ const std::vector<std::string> &HammerProfile::getThumbSpecialKeys() const {
 }
 
 
-
 std::vector<std::string> HammerProfile::UnpackJson(cJSON *json) {
     int count = cJSON_GetArraySize(json);
     std::vector<std::string> ret;
@@ -57,7 +56,7 @@ std::vector<std::string> HammerProfile::UnpackJson(cJSON *json) {
 
 }
 
-bool ContainsKey(std::string key, std::vector<std::string> keys){
+bool ContainsKey(std::string key, std::vector<std::string> keys) {
     return std::find(keys.begin(), keys.end(), key) != keys.end();
 }
 
@@ -79,4 +78,17 @@ bool HammerProfile::ContainsOption(std::vector<std::string> keys) {
 
 const std::string &HammerProfile::getName() const {
     return name;
+}
+
+bool HammerProfile::ContainsEnter(std::vector<std::string> keys) {
+    return ContainsKey("enter", keys);
+
+}
+
+bool HammerProfile::ContainsTab(std::vector<std::string> keys) {
+    return ContainsKey("tab", keys);
+}
+
+bool HammerProfile::ContainsEsc(std::vector<std::string> keys) {
+    return ContainsKey("esc", keys);
 }
