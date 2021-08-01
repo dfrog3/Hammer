@@ -1,0 +1,111 @@
+[
+    {
+        "name": "one",
+        "strikeDisplay": "a",
+        "strikeChars": [
+            "a"
+        ],
+        "strikeSpecialKeys": [
+            "apple",
+            "shift",
+            "control",
+            "option"
+        ],
+        "thumbDisplay": "b",
+        "thumbChars": [
+            "b"
+        ],
+        "thumbSpecialKeys": []
+    },
+    {
+        "name": "two",
+        "strikeDisplay": "c",
+        "strikeChars": [
+            "d"
+        ],
+        "strikeSpecialKeys": [
+            "apple",
+            "shift"
+        ],
+        "thumbDisplay": "b",
+        "thumbChars": [
+            "b"
+        ],
+        "thumbSpecialKeys": [
+            "control",
+            "option"
+        ]
+    },
+    {
+        "name": "one",
+        "strikeDisplay": "a",
+        "strikeChars": [
+            "a"
+        ],
+        "strikeSpecialKeys": [
+            "apple",
+            "shift",
+            "control",
+            "option"
+        ],
+        "thumbDisplay": "b",
+        "thumbChars": [
+            "b"
+        ],
+        "thumbSpecialKeys": []
+    },
+    {
+        "name": "one",
+        "strikeDisplay": "a",
+        "strikeChars": [
+            "a"
+        ],
+        "strikeSpecialKeys": [
+            "apple",
+            "shift",
+            "control",
+            "option"
+        ],
+        "thumbDisplay": "b",
+        "thumbChars": [
+            "b"
+        ],
+        "thumbSpecialKeys": []
+    },
+    {
+        "name": "one",
+        "strikeDisplay": "a",
+        "strikeChars": [
+            "a"
+        ],
+        "strikeSpecialKeys": [
+            "apple",
+            "shift",
+            "control",
+            "option"
+        ],
+        "thumbDisplay": "b",
+        "thumbChars": [
+            "b"
+        ],
+        "thumbSpecialKeys": []
+    },
+    {
+        "name": "one",
+        "strikeDisplay": "a",
+        "strikeChars": [
+            "a"
+        ],
+        "strikeSpecialKeys": [
+            "apple",
+            "shift",
+            "control",
+            "option"
+        ],
+        "thumbDisplay": "b",
+        "thumbChars": [
+            "b"
+        ],
+        "thumbSpecialKeys": []
+    }
+]

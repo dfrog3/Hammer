@@ -5,6 +5,7 @@
 #include <WiFi.h>
 #include <HammerSource/WifiJsonGetter.h>
 #include <HammerSource/OTAFirmFlasher.h>
+#include <HammerSource/KeyboardProgram.h>
 // todo boot screen 1
 // - mac pc flag
 // settings class and load settings 2
@@ -21,6 +22,7 @@ HammerDisplay *hammerDisplay;
 SdCardInterfacer *sdCard;
 RotaryWheel *rotaryWheel;
 WifiJsonGetter *jsonGetter;
+KeyboardProgram *keyboardProgram;
 
 int wheel1 = 34;
 int wheel2 = 32;
@@ -36,6 +38,8 @@ const std::string passwordFile = "/password.txt";
 const std::string settingsFile = "/settings.json";
 
 void setup() {
+    Serial.begin(115200);
+
     pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);
     pinMode(macPc, INPUT_PULLUP);
@@ -64,13 +68,13 @@ void setup() {
     } else {
         hammerDisplay->WriteText("start");
         rotaryWheel = new RotaryWheel(wheel1, wheel2);
+        keyboardProgram = new KeyboardProgram(rotaryWheel, sdCard, hammerDisplay, settingsFile);
 //        jsonGetter = new WifiJsonGetter(hammerDisplay, sdCard, ssidFile, passwordFile, settingsFile);
         delay(1000);
     }
 
 
 
-    Serial.begin(115200);
 }
 
 
@@ -79,8 +83,5 @@ void loop() {
         OTAFirmFlasher::Update();
         return;
     }
-    rotaryWheel->Update();
-    hammerDisplay->DrawFrame();
-    delay(1000);
-
+    keyboardProgram->Update();
 }

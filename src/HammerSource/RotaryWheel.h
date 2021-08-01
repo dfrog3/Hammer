@@ -54,8 +54,10 @@ public:
     void Update();
     void SetTurnAction(std::function<void(RotaryState, int)> *function);
 
+    unsigned long getLastDirectionTime() const;
 
 
+    void ResetCount();
 };
 
 

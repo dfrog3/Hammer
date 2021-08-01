@@ -116,6 +116,15 @@ void RotaryWheel::SetTurnAction(std::function<void(RotaryState, int)> *function)
     turnFunction = *function;
 }
 
+unsigned long RotaryWheel::getLastDirectionTime() const {
+    return lastDirectionTime;
+}
+
+void RotaryWheel::ResetCount() {
+    directionCount = 0;
+
+}
+
 
 WheelEvent::WheelEvent(RotaryState state, unsigned long mills) {
     this->state = state;

@@ -8,6 +8,7 @@
 
 #include <Arduino.h>
 #include "RotaryWheel.h"
+#include "HammerSource/HammerProfile.h"
 
 class HammerDisplay {
     HammerDisplay &operator=(const HammerDisplay &) = delete;
@@ -23,9 +24,9 @@ public:
 
     void DrawFrame();
 
-    void DrawKeys();
+    void DrawKeys(HammerProfile *profile);
 
-    void DrawMotionBar(float percentComplete);
+    void DrawMotionBar(float percentComplete, bool direction);
 
     void DrawProfileNames(int mode, std::string names[6]);
 };
