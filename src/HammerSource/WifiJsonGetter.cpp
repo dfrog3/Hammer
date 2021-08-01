@@ -84,10 +84,13 @@ std::string urlDecode(std::string str) {
 void WifiJsonGetter::ProcessHeader() {
     std::string s = header.c_str();
     int start = s.find('=') + 1;
-    int end = s.find('\n') - 25;
+    int end = s.substr(start).find(' ');
+
 
     std::string front = s.substr(0, start);
-    std::string j = s.substr(start, end);
+    std::string j = s.substr(start).substr(0, end);
+//    Serial.println("end");
+//    Serial.println(j.c_str());
     j = urlDecode(j);
 
     bool isSettings = (front.find("settings") != std::string::npos);

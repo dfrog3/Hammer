@@ -32,7 +32,7 @@ std::function<void()> updateFunction = *new std::function<void()>([]() {});
 
 
 void setup() {
-    Serial.begin(115200);
+//    Serial.begin(115200);
 
     pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);

@@ -14,7 +14,7 @@ Adafruit_SSD1306 display(128, 32);
 HammerDisplay::HammerDisplay() {
     delay(1000);
     if (!display.begin(SSD1306_SWITCHCAPVCC, DISPLAY_ADDRESS)) {
-        Serial.println("SSD1306 allocation failed");
+//        Serial.println("SSD1306 allocation failed");
         for (;;);
     }
 
