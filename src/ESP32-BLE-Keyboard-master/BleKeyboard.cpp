@@ -116,6 +116,11 @@ void BleKeyboard::setBatteryLevel(uint8_t level) {
     this->hid->setBatteryLevel(this->batteryLevel);
 }
 
+//must be called before begin in order to set the name
+void BleKeyboard::setName(std::string deviceName) {
+  this->deviceName = deviceName;
+}
+
 void BleKeyboard::taskServer(void* pvParameter) {
   BleKeyboard* bleKeyboardInstance = (BleKeyboard *) pvParameter; //static_cast<BleKeyboard *>(pvParameter);
   BLEDevice::init(bleKeyboardInstance->deviceName);
@@ -128,7 +133,7 @@ void BleKeyboard::taskServer(void* pvParameter) {
   bleKeyboardInstance->inputMediaKeys = bleKeyboardInstance->hid->inputReport(MEDIA_KEYS_ID);
   bleKeyboardInstance->connectionStatus->inputKeyboard = bleKeyboardInstance->inputKeyboard;
   bleKeyboardInstance->connectionStatus->outputKeyboard = bleKeyboardInstance->outputKeyboard;
-	bleKeyboardInstance->connectionStatus->inputMediaKeys = bleKeyboardInstance->inputMediaKeys;
+  bleKeyboardInstance->connectionStatus->inputMediaKeys = bleKeyboardInstance->inputMediaKeys;
 
   bleKeyboardInstance->outputKeyboard->setCallbacks(new KeyboardOutputCallbacks());
 
@@ -146,11 +151,11 @@ void BleKeyboard::taskServer(void* pvParameter) {
 
   bleKeyboardInstance->onStarted(pServer);
 
-  BLEAdvertising *pAdvertising = pServer->getAdvertising();
-  pAdvertising->setAppearance(HID_KEYBOARD);
-  pAdvertising->addServiceUUID(bleKeyboardInstance->hid->hidService()->getUUID());
-  pAdvertising->setScanResponse(false);
-  pAdvertising->start();
+  bleKeyboardInstance->connectionStatus->pAdvertising = pServer->getAdvertising();
+  bleKeyboardInstance->connectionStatus->pAdvertising->setAppearance(HID_KEYBOARD);
+  bleKeyboardInstance->connectionStatus->pAdvertising->addServiceUUID(bleKeyboardInstance->hid->hidService()->getUUID());
+  bleKeyboardInstance->connectionStatus->pAdvertising->setScanResponse(false);
+  bleKeyboardInstance->connectionStatus->pAdvertising->start();
   bleKeyboardInstance->hid->setBatteryLevel(bleKeyboardInstance->batteryLevel);
 
   ESP_LOGD(LOG_TAG, "Advertising started!");
@@ -318,7 +323,7 @@ uint8_t USBPutChar(uint8_t c);
 // press() adds the specified key (printing, non-printing, or modifier)
 // to the persistent key report and sends the report.  Because of the way
 // USB HID works, the host acts like the key remains pressed until we
-// call release(), releaseAll(), or otherwise d20 the report and resend.
+// call release(), releaseAll(), or otherwise clear the report and resend.
 size_t BleKeyboard::press(uint8_t k)
 {
 	uint8_t i;

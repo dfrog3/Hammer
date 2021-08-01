@@ -2,83 +2,77 @@ import json
 
 profile1 = {
 
-    "name":              "one",
-    "strikeDisplay":     "a",
+    "name":              "Enter",
+    "strikeDisplay":     "#",
 
-
-    "strikeChars":       ["a"],
-    "strikeSpecialKeys": ["apple", "shift", "control", "option"],
-    "thumbDisplay":      "b",
-    "thumbChars":        ["b"],
-    "thumbSpecialKeys":  []
+    "strikeChars":       [],
+    "strikeSpecialKeys": ["enter"],
+    "thumbDisplay":      "T",
+    "thumbChars":        [],
+    "thumbSpecialKeys":  ["tab"]
 
     }
 profile2 = {
 
-    "name":              "two",
-    "strikeDisplay":     "c",
+    "name":              "Copy",
+    "strikeDisplay":     "V",
 
-
-    "strikeChars":       ["d"],
-    "strikeSpecialKeys": ["apple", "shift"],
-    "thumbDisplay":      "b",
-    "thumbChars":        ["b"],
-    "thumbSpecialKeys":  [ "control", "option"]
+    "strikeChars":       ["v"],
+    "strikeSpecialKeys": ["apple"],
+    "thumbDisplay":      "X",
+    "thumbChars":        ["x"],
+    "thumbSpecialKeys":  ["apple"]
 
     }
 profile3 = {
 
-    "name":              "one",
-    "strikeDisplay":     "a",
+    "name":              "Quit",
+    "strikeDisplay":     "Q",
 
-
-    "strikeChars":       ["a"],
-    "strikeSpecialKeys": ["apple", "shift", "control", "option"],
-    "thumbDisplay":      "b",
-    "thumbChars":        ["b"],
-    "thumbSpecialKeys":  []
+    "strikeChars":       ["q"],
+    "strikeSpecialKeys": ["apple"],
+    "thumbDisplay":      "T",
+    "thumbChars":        [],
+    "thumbSpecialKeys":  ["apple", "tab"]
 
     }
 profile4 = {
 
-    "name":              "one",
-    "strikeDisplay":     "a",
+    "name":              "Force",
+    "strikeDisplay":     "Q",
 
-
-    "strikeChars":       ["a"],
-    "strikeSpecialKeys": ["apple", "shift", "control", "option"],
-    "thumbDisplay":      "b",
-    "thumbChars":        ["b"],
-    "thumbSpecialKeys":  []
+    "strikeChars":       [],
+    "strikeSpecialKeys": ["apple", "option", "esc"],
+    "thumbDisplay":      "#",
+    "thumbChars":        [],
+    "thumbSpecialKeys":  ["enter"]
 
     }
 profile5 = {
 
-    "name":              "one",
-    "strikeDisplay":     "a",
+    "name":              "Formt",
+    "strikeDisplay":     "S",
 
-
-    "strikeChars":       ["a"],
-    "strikeSpecialKeys": ["apple", "shift", "control", "option"],
-    "thumbDisplay":      "b",
-    "thumbChars":        ["b"],
-    "thumbSpecialKeys":  []
+    "strikeChars":       ["s"],
+    "strikeSpecialKeys": ["apple", "shift"],
+    "thumbDisplay":      "S",
+    "thumbChars":        ["s"],
+    "thumbSpecialKeys":  ["apple"]
 
     }
 profile6 = {
 
-    "name":              "one",
-    "strikeDisplay":     "a",
-
+    "name":              "blank",
+    "strikeDisplay":     "A",
 
     "strikeChars":       ["a"],
-    "strikeSpecialKeys": ["apple", "shift", "control", "option"],
-    "thumbDisplay":      "b",
+    "strikeSpecialKeys": [],
+    "thumbDisplay":      "B",
     "thumbChars":        ["b"],
     "thumbSpecialKeys":  []
 
     }
 
 f = open("settings.json", "w")
-json.dump([profile1,profile2,profile3,profile4,profile5,profile6], f, indent=4)
+json.dump([profile1, profile2, profile3, profile4, profile5, profile6], f, indent=4)
 f.close()

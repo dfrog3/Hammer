@@ -8,10 +8,6 @@
 #include <HammerSource/KeyboardProgram.h>
 // todo boot screen 1
 // - mac pc flag
-// settings class and load settings 2
-// - set active settings
-// - bluetooth press buttons
-// - settings ui
 
 
 String ssid = "dhr01-d6a488-g";

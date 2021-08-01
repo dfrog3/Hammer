@@ -1,108 +1,91 @@
 [
     {
-        "name": "one",
-        "strikeDisplay": "a",
-        "strikeChars": [
-            "a"
-        ],
+        "name": "Enter",
+        "strikeDisplay": "#",
+        "strikeChars": [],
         "strikeSpecialKeys": [
-            "apple",
-            "shift",
-            "control",
-            "option"
+            "enter"
         ],
-        "thumbDisplay": "b",
-        "thumbChars": [
-            "b"
-        ],
-        "thumbSpecialKeys": []
+        "thumbDisplay": "T",
+        "thumbChars": [],
+        "thumbSpecialKeys": [
+            "tab"
+        ]
     },
     {
-        "name": "two",
-        "strikeDisplay": "c",
+        "name": "Copy",
+        "strikeDisplay": "V",
         "strikeChars": [
-            "d"
+            "V"
+        ],
+        "strikeSpecialKeys": [
+            "apple"
+        ],
+        "thumbDisplay": "X",
+        "thumbChars": [
+            "X"
+        ],
+        "thumbSpecialKeys": [
+            "apple"
+        ]
+    },
+    {
+        "name": "Quit",
+        "strikeDisplay": "Q",
+        "strikeChars": [
+            "Q"
+        ],
+        "strikeSpecialKeys": [
+            "apple"
+        ],
+        "thumbDisplay": "T",
+        "thumbChars": [],
+        "thumbSpecialKeys": [
+            "apple",
+            "tab"
+        ]
+    },
+    {
+        "name": "Force",
+        "strikeDisplay": "Q",
+        "strikeChars": [],
+        "strikeSpecialKeys": [
+            "apple",
+            "option",
+            "esc"
+        ],
+        "thumbDisplay": "#",
+        "thumbChars": [],
+        "thumbSpecialKeys": [
+            "enter"
+        ]
+    },
+    {
+        "name": "Formt",
+        "strikeDisplay": "S",
+        "strikeChars": [
+            "s"
         ],
         "strikeSpecialKeys": [
             "apple",
             "shift"
         ],
-        "thumbDisplay": "b",
+        "thumbDisplay": "S",
         "thumbChars": [
-            "b"
+            "s"
         ],
         "thumbSpecialKeys": [
-            "control",
-            "option"
+            "apple"
         ]
     },
     {
-        "name": "one",
-        "strikeDisplay": "a",
+        "name": "blank",
+        "strikeDisplay": "A",
         "strikeChars": [
             "a"
         ],
-        "strikeSpecialKeys": [
-            "apple",
-            "shift",
-            "control",
-            "option"
-        ],
-        "thumbDisplay": "b",
-        "thumbChars": [
-            "b"
-        ],
-        "thumbSpecialKeys": []
-    },
-    {
-        "name": "one",
-        "strikeDisplay": "a",
-        "strikeChars": [
-            "a"
-        ],
-        "strikeSpecialKeys": [
-            "apple",
-            "shift",
-            "control",
-            "option"
-        ],
-        "thumbDisplay": "b",
-        "thumbChars": [
-            "b"
-        ],
-        "thumbSpecialKeys": []
-    },
-    {
-        "name": "one",
-        "strikeDisplay": "a",
-        "strikeChars": [
-            "a"
-        ],
-        "strikeSpecialKeys": [
-            "apple",
-            "shift",
-            "control",
-            "option"
-        ],
-        "thumbDisplay": "b",
-        "thumbChars": [
-            "b"
-        ],
-        "thumbSpecialKeys": []
-    },
-    {
-        "name": "one",
-        "strikeDisplay": "a",
-        "strikeChars": [
-            "a"
-        ],
-        "strikeSpecialKeys": [
-            "apple",
-            "shift",
-            "control",
-            "option"
-        ],
-        "thumbDisplay": "b",
+        "strikeSpecialKeys": [],
+        "thumbDisplay": "B",
         "thumbChars": [
             "b"
         ],
