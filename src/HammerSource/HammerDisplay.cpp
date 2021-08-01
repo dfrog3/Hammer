@@ -289,3 +289,14 @@ void HammerDisplay::DrawProfileNames(int mode, std::string names[6]) {
     display.display();
 
 }
+
+void HammerDisplay::WriteBiosMenu(int i) {
+    display.clearDisplay();
+    display.setCursor(0,0);
+    display.setTextColor(i, !i);
+    display.println("firm");
+    display.setTextColor(!i, i);
+    display.println("config");
+    display.display();
+
+}

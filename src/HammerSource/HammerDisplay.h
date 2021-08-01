@@ -29,6 +29,8 @@ public:
     void DrawMotionBar(float percentComplete, bool direction);
 
     void DrawProfileNames(int mode, std::string names[6]);
+
+    void WriteBiosMenu(int i);
 };
 
 

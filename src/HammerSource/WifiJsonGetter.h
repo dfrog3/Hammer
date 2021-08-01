@@ -34,12 +34,12 @@ private:
     static void SendResponse(WiFiClient client);
 
 public:
-    WifiJsonGetter &operator=(const WifiJsonGetter &) = delete;
 
     WifiJsonGetter(HammerDisplay *hammerDisplay, SdCardInterfacer *sdCardInterfacer,
                    std::string ssid,
                    std::string password,
                    std::string settings);
+    WifiJsonGetter &operator=(const WifiJsonGetter &) = delete;
 
     void Update();
 };

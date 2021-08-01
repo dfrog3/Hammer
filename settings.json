@@ -16,14 +16,14 @@
         "name": "Copy",
         "strikeDisplay": "V",
         "strikeChars": [
-            "V"
+            "v"
         ],
         "strikeSpecialKeys": [
             "apple"
         ],
         "thumbDisplay": "X",
         "thumbChars": [
-            "X"
+            "x"
         ],
         "thumbSpecialKeys": [
             "apple"
@@ -33,7 +33,7 @@
         "name": "Quit",
         "strikeDisplay": "Q",
         "strikeChars": [
-            "Q"
+            "q"
         ],
         "strikeSpecialKeys": [
             "apple"
