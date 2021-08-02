@@ -234,8 +234,8 @@ void HammerDisplay::DrawMotionBar(float percentComplete, bool direction) {
     int secondHalf = !direction;
     int middlePoint = floorf(32 * percentComplete);
 
-    if(!direction){
-        middlePoint = 32-middlePoint;
+    if (!direction) {
+        middlePoint = 32 - middlePoint;
     }
     display.drawLine(0, 70, middlePoint, 70, firstHalf);
     display.drawLine(0, 71, middlePoint, 71, firstHalf);

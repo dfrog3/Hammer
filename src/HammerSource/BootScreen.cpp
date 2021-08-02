@@ -55,8 +55,8 @@ void BootScreen::Update() {
         if (activeProfileIndex == 0) {
             isFirm = true;
             OTAFirmFlasher::Init(hammerDisplay,
-                              sdCardInterfacer->readFile(ssid.c_str()).c_str(),
-                              sdCardInterfacer->readFile(password.c_str()).c_str()
+                                 sdCardInterfacer->readFile(ssid.c_str()).c_str(),
+                                 sdCardInterfacer->readFile(password.c_str()).c_str()
             );
         } else {
             isConfig = true;
