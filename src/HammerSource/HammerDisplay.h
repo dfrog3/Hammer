@@ -13,6 +13,9 @@
 class HammerDisplay {
     HammerDisplay &operator=(const HammerDisplay &) = delete;
 
+private:
+    bool savedDisplay[32][128];
+
 public:
     HammerDisplay();
 
@@ -31,6 +34,10 @@ public:
     void DrawProfileNames(int mode, std::string names[6]);
 
     void WriteBiosMenu(int i);
+
+    void Hide();
+
+    void Show();
 };
 
 

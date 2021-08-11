@@ -34,7 +34,8 @@ std::function<void()> updateFunction = *new std::function<void()>([]() {});
 void setup() {
 //    Serial.begin(115200);
 
-    pinMode(strike, INPUT_PULLUP);
+
+pinMode(strike, INPUT_PULLUP);
     pinMode(thumb, INPUT_PULLUP);
     pinMode(macPc, INPUT_PULLUP);
     delay(1000);
@@ -46,16 +47,9 @@ void setup() {
     ssid = sdCard->readFile(ssidFile.c_str());
     password = sdCard->readFile(passwordFile.c_str());
 
-    hammerDisplay->WriteText("reset?");
-    delay(2000);
-    bool hasHitThumb = false;
-    unsigned long currentTime = millis();
-    while (millis() < currentTime + 3000) {
-        delay(500);
-        hasHitThumb = hasHitThumb || (digitalRead(thumb) == LOW);
-    }
 
-    if (hasHitThumb) {
+
+    if (digitalRead(thumb) == LOW) {
         bootScreen = new BootScreen(rotaryWheel, sdCard, hammerDisplay, strike, ssidFile.c_str(), passwordFile.c_str(),
                                     settingsFile.c_str());
         updateFunction = []() { bootScreen->Update(); };

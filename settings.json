@@ -21,9 +21,9 @@
         "strikeSpecialKeys": [
             "apple"
         ],
-        "thumbDisplay": "X",
+        "thumbDisplay": "C",
         "thumbChars": [
-            "x"
+            "c"
         ],
         "thumbSpecialKeys": [
             "apple"
@@ -79,16 +79,20 @@
         ]
     },
     {
-        "name": "blank",
-        "strikeDisplay": "A",
+        "name": "Play",
+        "strikeDisplay": "P",
         "strikeChars": [
-            "a"
+            "p"
         ],
-        "strikeSpecialKeys": [],
-        "thumbDisplay": "B",
+        "strikeSpecialKeys": [
+            "apple"
+        ],
+        "thumbDisplay": "1",
         "thumbChars": [
-            "b"
+            "1"
         ],
-        "thumbSpecialKeys": []
+        "thumbSpecialKeys": [
+            "apple"
+        ]
     }
 ]

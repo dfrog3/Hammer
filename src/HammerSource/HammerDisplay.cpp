@@ -292,11 +292,33 @@ void HammerDisplay::DrawProfileNames(int mode, std::string names[6]) {
 
 void HammerDisplay::WriteBiosMenu(int i) {
     display.clearDisplay();
-    display.setCursor(0,0);
+    display.setCursor(0, 0);
     display.setTextColor(i, !i);
     display.println("firm");
     display.setTextColor(!i, i);
     display.println("config");
     display.display();
 
+}
+
+void HammerDisplay::Hide() {
+    for (int i = 0; i < 128; ++i) {
+        for (int j = 0; j < 32; ++j) {
+            savedDisplay[j][i] = display.getPixel(j, i);
+        }
+    }
+
+
+    display.clearDisplay();
+    display.display();
+}
+
+void HammerDisplay::Show() {
+    for (int i = 0; i < 128; ++i) {
+        for (int j = 0; j < 32; ++j) {
+            display.drawPixel(j, i, savedDisplay[j][i]);
+        }
+    }
+
+    display.display();
 }

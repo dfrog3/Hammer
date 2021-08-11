@@ -28,15 +28,19 @@ private:
     RotaryWheel *rotaryWheel;
     HammerDisplay *hammerDisplay;
     bool hasReleasedStrike;
+
     int strike;
     int thumb;
     long canStrikeTime = 0;
     long eraseLastTurnTime;
     volatile int activeProfileIndex = 0;
+    long hitTime;
+    bool canSleep;
 private:
     void DrawNames();
     void PressButtons();
     void PressSpecialKeys(std::vector<std::string> keys);
+    void Resume();
 public:
     KeyboardProgram(
             RotaryWheel *rotaryWheel,

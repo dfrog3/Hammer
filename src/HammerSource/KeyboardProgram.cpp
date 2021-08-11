@@ -2,10 +2,12 @@
 // Created by David Kaschub on 2021/08/01.
 //
 
+#include <esp_wifi.h>
 #include "KeyboardProgram.h"
 
 BleKeyboard bleKeyboard;
 
+static bool needsWake;
 
 KeyboardProgram::KeyboardProgram(
         RotaryWheel *rotaryWheel,
@@ -13,6 +15,10 @@ KeyboardProgram::KeyboardProgram(
         HammerDisplay *hammerDisplay,
         std::string settingsFileName,
         int strike, int thumb) {
+    esp_wifi_stop();
+    hitTime = millis();
+    needsWake = false;
+    canSleep = true;
     this->strike = strike;
     this->thumb = thumb;
     std::string rawSettings = sdCardInterfacer->readFile(settingsFileName.c_str()).c_str();
@@ -64,7 +70,8 @@ void KeyboardProgram::DrawNames() {
 }
 
 void KeyboardProgram::OnWheelTurn(RotaryState state, int count) {
-    eraseLastTurnTime = millis() + 2000;//time until reset scroll wheel
+    hitTime = millis();
+    eraseLastTurnTime = hitTime + 2000;//time until reset scroll wheel
     if (count > 3) {
         switch (state) {
 
@@ -97,6 +104,17 @@ void KeyboardProgram::OnWheelTurn(RotaryState state, int count) {
 
 }
 
+void KeyboardProgram::Resume() {
+    setCpuFrequencyMhz(240);
+    hammerDisplay->Show();
+    detachInterrupt(strike);
+    detachInterrupt(thumb);
+    detachInterrupt(34);
+    detachInterrupt(32);
+    hitTime = millis();
+}
+
+
 void KeyboardProgram::Update() {
     rotaryWheel->Update();
     PressButtons();
@@ -105,11 +123,29 @@ void KeyboardProgram::Update() {
         hammerDisplay->DrawMotionBar(0, true);
 
     }
+    if (((millis() - hitTime) > (15 * 1000)) && canSleep) {
+        hammerDisplay->Hide();
+        canSleep = false;
+
+
+        // interupts
+        attachInterrupt(strike, []() { needsWake = true; }, CHANGE);
+        attachInterrupt(thumb, []() { needsWake = true; }, CHANGE);
+        attachInterrupt(34, []() { needsWake = true; }, CHANGE);
+        attachInterrupt(32, []() { needsWake = true; }, CHANGE);
+        setCpuFrequencyMhz(10);
+    }
+    if (needsWake) {
+        Resume();
+        needsWake = false;
+        canSleep = true;
+    }
 
 
 }
 
-void KeyboardProgram::PressSpecialKeys(std::vector<std::string> keys){
+
+void KeyboardProgram::PressSpecialKeys(std::vector<std::string> keys) {
     if (HammerProfile::ContainsApple(keys)) {
         bleKeyboard.press(KEY_LEFT_GUI);
     }
@@ -134,9 +170,12 @@ void KeyboardProgram::PressSpecialKeys(std::vector<std::string> keys){
 }
 
 
-
 void KeyboardProgram::PressButtons() {
     bool struck = (digitalRead(strike) == LOW);
+    bool held = digitalRead(thumb) == LOW;
+    if (struck || held) {
+        hitTime = millis();
+    }
     if (struck) {
 
         if (!hasReleasedStrike) {
@@ -144,7 +183,7 @@ void KeyboardProgram::PressButtons() {
         }
         hasReleasedStrike = false;
         canStrikeTime = millis() + 500;//time between strikes
-        if (digitalRead(thumb) == LOW) {
+        if (held) {
             PressSpecialKeys(activeProfile->getThumbSpecialKeys());
             for (const auto &i : activeProfile->getThumbChars()) {
                 bleKeyboard.press(std::tolower(i[0]));
@@ -167,3 +206,5 @@ void KeyboardProgram::PressButtons() {
 
 
 }
+
+

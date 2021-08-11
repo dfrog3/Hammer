@@ -19,8 +19,8 @@ profile2 = {
 
     "strikeChars":       ["v"],
     "strikeSpecialKeys": ["apple"],
-    "thumbDisplay":      "X",
-    "thumbChars":        ["x"],
+    "thumbDisplay":      "C",
+    "thumbChars":        ["c"],
     "thumbSpecialKeys":  ["apple"]
 
     }
@@ -62,14 +62,14 @@ profile5 = {
     }
 profile6 = {
 
-    "name":              "blank",
-    "strikeDisplay":     "A",
+    "name":              "Play",
+    "strikeDisplay":     "P",
 
-    "strikeChars":       ["a"],
-    "strikeSpecialKeys": [],
-    "thumbDisplay":      "B",
-    "thumbChars":        ["b"],
-    "thumbSpecialKeys":  []
+    "strikeChars":       ["p"],
+    "strikeSpecialKeys": ["apple"],
+    "thumbDisplay":      "1",
+    "thumbChars":        ["1"],
+    "thumbSpecialKeys":  ["apple"]
 
     }
 
